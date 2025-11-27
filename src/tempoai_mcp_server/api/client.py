@@ -217,5 +217,3 @@ def _handle_http_status_error(e: httpx.HTTPStatusError) -> dict[str, Any]:
         "status_code": error_code,
         "message": _get_error_message(error_code, error_text),
     }
-
-

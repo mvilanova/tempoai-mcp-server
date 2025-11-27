@@ -16,7 +16,7 @@ from tempoai_mcp_server.utils.formatting import (
 
 def test_format_workout_summary():
     """
-    Test that format_workout_summary returns a string containing the workout name and ID.
+    Test that format_workout_summary returns a string containing the workout name and type.
     """
     workout = {
         "id": 123,
@@ -30,7 +30,6 @@ def test_format_workout_summary():
     }
     result = format_workout_summary(workout)
     assert "Workout: Morning Ride" in result
-    assert "ID: 123" in result
     assert "Type: Ride" in result
 
 

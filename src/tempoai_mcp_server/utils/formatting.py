@@ -311,7 +311,11 @@ def format_event_summary(event: dict[str, Any]) -> str:
     if event.get("distance_km"):
         lines.append(f"  Distance: {event['distance_km']} km")
     if event.get("description"):
-        desc = event["description"][:100] + "..." if len(event["description"]) > 100 else event["description"]
+        desc = (
+            event["description"][:100] + "..."
+            if len(event["description"]) > 100
+            else event["description"]
+        )
         lines.append(f"  Description: {desc}")
 
     return "\n".join(lines)
@@ -377,7 +381,9 @@ def format_event_details(event: dict[str, Any]) -> str:
     # Settings
     settings = []
     if event.get("auto_calculate_intensity") is not None:
-        settings.append(f"  Auto Calculate Intensity: {'Yes' if event['auto_calculate_intensity'] else 'No'}")
+        settings.append(
+            f"  Auto Calculate Intensity: {'Yes' if event['auto_calculate_intensity'] else 'No'}"
+        )
     if event.get("include_drafting") is not None:
         settings.append(f"  Include Drafting: {'Yes' if event['include_drafting'] else 'No'}")
 

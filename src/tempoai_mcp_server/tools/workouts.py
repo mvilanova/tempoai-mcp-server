@@ -117,4 +117,3 @@ async def get_workout_details(
         return f"Invalid workout format for workout {workout_id}."
 
     return format_workout_details(result)
-
