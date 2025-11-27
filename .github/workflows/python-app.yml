@@ -32,7 +32,6 @@ jobs:
         pip install -e .
     - name: Test with pytest
       env:
-        PUBLIC_ID: ${{ secrets.PUBLIC_ID }}
         API_KEY: ${{ secrets.API_KEY }}
       run: |
         pytest

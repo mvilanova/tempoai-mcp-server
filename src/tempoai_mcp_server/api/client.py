@@ -12,8 +12,8 @@ from contextlib import asynccontextmanager
 from http import HTTPStatus
 from typing import Any
 
-import httpx  # pylint: disable=import-error
-from mcp.server.fastmcp import FastMCP  # pylint: disable=import-error
+import httpx
+from mcp.server.fastmcp import FastMCP
 
 from tempoai_mcp_server.config import get_config
 
@@ -34,7 +34,7 @@ async def _get_httpx_client() -> httpx.AsyncClient:
     This function checks server.httpx_client first (if available) to support
     test monkeypatching via server.httpx_client.
     """
-    global httpx_client  # pylint: disable=global-statement  # noqa: PLW0603 - we intentionally manage the shared client here
+    global httpx_client  # noqa: PLW0603 - we intentionally manage the shared client here
 
     # Check for monkeypatched client in server module first (for test compatibility)
     # This allows tests to monkeypatch server.httpx_client and have it work
@@ -184,7 +184,7 @@ async def make_tempo_ai_request(
             if "client has been closed" not in str(runtime_error).lower():
                 raise
             logger.warning("HTTPX client was closed; creating a new instance for retries.")
-            global httpx_client  # pylint: disable=global-statement  # noqa: PLW0603 - we intentionally manage the shared client here
+            global httpx_client  # noqa: PLW0603 - we intentionally manage the shared client here
             httpx_client = None
             client = await _get_httpx_client()
             response = await _send_request(client)

@@ -19,7 +19,7 @@ import sys
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "src"))
 os.environ.setdefault("API_KEY", "test")
 
-from tempoai_mcp_server.server import (  # pylint: disable=wrong-import-position
+from tempoai_mcp_server.server import (
     get_workouts,
     get_workout_details,
     get_events,

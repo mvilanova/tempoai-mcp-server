@@ -32,7 +32,7 @@ Usage:
 
 import logging
 
-from mcp.server.fastmcp import FastMCP  # pylint: disable=import-error
+from mcp.server.fastmcp import FastMCP
 
 # Import API client and configuration
 from tempoai_mcp_server.api.client import (
@@ -60,24 +60,24 @@ config = get_config()
 mcp = FastMCP("tempoai", lifespan=setup_api_client)
 
 # Set the shared mcp instance for tool modules to use (breaks cyclic imports)
-from tempoai_mcp_server import mcp_instance  # pylint: disable=wrong-import-position  # noqa: E402
+from tempoai_mcp_server import mcp_instance  # noqa: E402
 
 mcp_instance.mcp = mcp
 
 # Import tool modules to register them (tools register themselves via @mcp.tool() decorators)
 # Import tool functions for re-export (imported after mcp instance creation)
-from tempoai_mcp_server.tools.workouts import (  # pylint: disable=wrong-import-position  # noqa: E402
+from tempoai_mcp_server.tools.workouts import (  # noqa: E402
     get_workouts,
     get_workout_details,
 )
-from tempoai_mcp_server.tools.events import (  # pylint: disable=wrong-import-position  # noqa: E402
+from tempoai_mcp_server.tools.events import (  # noqa: E402
     get_events,
     get_event_details,
 )
-from tempoai_mcp_server.tools.wellness import get_wellness  # pylint: disable=wrong-import-position  # noqa: E402
+from tempoai_mcp_server.tools.wellness import get_wellness  # noqa: E402
 
 # Re-export make_tempo_ai_request and httpx_client for backward compatibility
-# pylint: disable=duplicate-code  # This __all__ list is intentionally similar to tools/__init__.py
+# This __all__ list is intentionally similar to tools/__init__.py
 __all__ = [
     "make_tempo_ai_request",
     "httpx_client",  # Re-exported for test compatibility

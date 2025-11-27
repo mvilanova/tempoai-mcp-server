@@ -7,7 +7,7 @@ This module handles transport configuration and server startup logic.
 import os
 import logging
 
-from mcp.server.fastmcp import FastMCP  # pylint: disable=import-error
+from mcp.server.fastmcp import FastMCP
 
 from tempoai_mcp_server.utils.types import TransportAliases
 

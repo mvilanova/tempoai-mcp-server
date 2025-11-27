@@ -4,7 +4,7 @@ MCP tools registry for Tempo AI MCP Server.
 This module registers all available MCP tools with the FastMCP server instance.
 """
 
-from mcp.server.fastmcp import FastMCP  # pylint: disable=import-error
+from mcp.server.fastmcp import FastMCP
 
 # Import all tools for re-export
 # Note: Tools register themselves via @mcp.tool() decorators when imported
