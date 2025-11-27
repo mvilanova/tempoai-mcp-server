@@ -74,7 +74,7 @@ def test_make_tempo_ai_request_bad_json(monkeypatch, caplog):
     monkeypatch.setattr(client, "httpx_client", MockAsyncClient())
 
     with caplog.at_level(logging.ERROR):
-        result = asyncio.run(client.make_tempo_ai_request("/bad"))
+        result = asyncio.run(client.make_tempo_ai_request("/bad", api_key="test-key"))
 
     assert result["error"] is True
     assert "Invalid JSON in response" in result["message"]
