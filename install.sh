@@ -69,7 +69,7 @@ fi
 # Create virtual environment and sync dependencies
 echo -e "${YELLOW}🐍 Setting up Python 3.13 environment...${NC}"
 uv venv --python 3.13
-source .venv/bin/activate
+. .venv/bin/activate
 uv sync
 echo -e "${GREEN}✓ Python environment ready${NC}"
 
