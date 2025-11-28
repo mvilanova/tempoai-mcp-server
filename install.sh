@@ -94,6 +94,7 @@ fi
 
 # Create .env file
 echo "API_KEY=${API_KEY}" > .env
+chmod 600 .env
 echo -e "${GREEN}✓ Environment configured${NC}"
 
 # Configure Claude Desktop
