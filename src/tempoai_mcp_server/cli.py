@@ -66,7 +66,9 @@ def run_mcp_install(server_path: Path, package_dir: Path, env_file: Path) -> Non
             "Please ensure mcp[cli] is installed: pip install 'mcp[cli]'"
         ) from err
     except subprocess.CalledProcessError:
-        raise click.ClickException("Failed to configure Claude Desktop. Please check your configuration and try again.")
+        raise click.ClickException(
+            "Failed to configure Claude Desktop. Please check your configuration and try again."
+        ) from None
 
 
 @click.group()
