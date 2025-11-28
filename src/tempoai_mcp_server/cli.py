@@ -32,6 +32,7 @@ def create_env_file(api_key: str, package_dir: Path) -> Path:
     """
     env_file = package_dir / ".env"
     env_file.write_text(f"API_KEY={api_key}\n")
+    env_file.chmod(0o600)
     return env_file
 
 
