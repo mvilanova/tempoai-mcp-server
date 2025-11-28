@@ -108,7 +108,7 @@ def install(api_key: str | None) -> None:
         click.echo("  2. Go to Settings > Developer")
         click.echo("  3. Generate a new API key")
         click.echo()
-        api_key = click.prompt("Enter your Tempo AI API key", hide_input=False)
+        api_key = click.prompt("Enter your Tempo AI API key", hide_input=True)
 
     if not api_key or not api_key.strip():
         raise click.ClickException("API key is required.")
