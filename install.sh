@@ -38,15 +38,31 @@ if ! command -v git &> /dev/null; then
     exit 1
 fi
 
+# On macOS, verify Xcode Command Line Tools are installed
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    if ! xcode-select -p &> /dev/null; then
+        echo -e "${YELLOW}📦 Installing Xcode Command Line Tools (required for git)...${NC}"
+        echo "A dialog will appear - please click 'Install' and wait for it to complete."
+        xcode-select --install
+        echo ""
+        echo -e "${YELLOW}After installation completes, please run this script again.${NC}"
+        exit 0
+    fi
+fi
+
 # Install uv if not present
 if ! command -v uv &> /dev/null; then
     echo -e "${YELLOW}📦 Installing uv package manager...${NC}"
     curl -LsSf https://astral.sh/uv/install.sh | sh
     # Source the shell profile to get uv in PATH
-    if [ -f "$HOME/.cargo/env" ]; then
+    # uv now installs to ~/.local/bin instead of ~/.cargo/bin
+    if [ -f "$HOME/.local/bin/env" ]; then
+        source "$HOME/.local/bin/env"
+    elif [ -f "$HOME/.cargo/env" ]; then
+        # Fallback for older uv installations
         source "$HOME/.cargo/env"
     fi
-    export PATH="$HOME/.cargo/bin:$PATH"
+    export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
     echo -e "${GREEN}✓ uv installed successfully${NC}"
 else
     echo -e "${GREEN}✓ uv is already installed${NC}"
@@ -56,6 +72,9 @@ fi
 if [ -d "$INSTALL_DIR" ]; then
     echo -e "${YELLOW}📥 Updating existing installation...${NC}"
     cd "$INSTALL_DIR"
+    # Reset any local changes that might block the update
+    git reset --hard HEAD
+    git clean -fd
     git pull origin main
     echo -e "${GREEN}✓ Repository updated${NC}"
 else
@@ -72,29 +91,34 @@ uv venv --python 3.13
 uv sync
 echo -e "${GREEN}✓ Python environment ready${NC}"
 
-# Prompt for API key
-echo ""
-echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
-echo -e "${YELLOW}🔑 API Key Setup${NC}"
-echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
-echo ""
-echo "To get your API key:"
-echo "  1. Log in at https://jointempo.ai/signin"
-echo "  2. Go to Settings > Developer"
-echo "  3. Generate a new API key"
-echo ""
-read -s -p "Enter your Tempo AI API key: " API_KEY
-echo
+# Prompt for API key (skip if already configured)
+if [ -f ".env" ] && grep -q "API_KEY=.\+" .env; then
+    echo -e "${GREEN}✓ API key already configured${NC}"
+    echo -e "  (To update your API key, edit ${INSTALL_DIR}/.env)"
+else
+    echo ""
+    echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
+    echo -e "${YELLOW}🔑 API Key Setup${NC}"
+    echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
+    echo ""
+    echo "To get your API key:"
+    echo "  1. Log in at https://jointempo.ai/signin"
+    echo "  2. Go to Settings > Developer"
+    echo "  3. Generate a new API key"
+    echo ""
+    read -s -p "Enter your Tempo AI API key: " API_KEY
+    echo
 
-if [ -z "$API_KEY" ]; then
-    echo -e "${RED}Error: API key is required.${NC}"
-    exit 1
+    if [ -z "$API_KEY" ]; then
+        echo -e "${RED}Error: API key is required.${NC}"
+        exit 1
+    fi
+
+    # Create .env file
+    echo "API_KEY=${API_KEY}" > .env
+    chmod 600 .env
+    echo -e "${GREEN}✓ Environment configured${NC}"
 fi
-
-# Create .env file
-echo "API_KEY=${API_KEY}" > .env
-chmod 600 .env
-echo -e "${GREEN}✓ Environment configured${NC}"
 
 # Configure Claude Desktop
 echo -e "${YELLOW}🔧 Configuring Claude Desktop...${NC}"
