@@ -90,9 +90,9 @@ fi
 
 # Create virtual environment and sync dependencies
 echo -e "${YELLOW}🐍 Setting up Python 3.13 environment...${NC}"
-uv venv --python 3.13 --clear
+uv venv --python 3.13 --quiet
 . .venv/bin/activate
-uv sync
+uv sync --quiet
 echo -e "${GREEN}✓ Python environment ready${NC}"
 
 # Prompt for API key (skip if already configured)
@@ -124,6 +124,14 @@ else
     echo -e "${GREEN}✓ Environment configured${NC}"
 fi
 
+# Verify the server can be imported successfully
+echo -e "${YELLOW}🔍 Verifying installation...${NC}"
+if ! python -c "from tempoai_mcp_server.server import mcp" 2>/dev/null; then
+    echo -e "${RED}Error: Server module failed to import. Please check for missing dependencies.${NC}"
+    exit 1
+fi
+echo -e "${GREEN}✓ Server module verified${NC}"
+
 # Configure Claude Desktop
 echo -e "${YELLOW}🔧 Configuring Claude Desktop...${NC}"
 if ! command -v mcp >/dev/null 2>&1; then
@@ -140,7 +148,7 @@ echo -e "${GREEN}✓ Claude Desktop configured${NC}"
 echo ""
 echo -e "${GREEN}"
 echo "╔══════════════════════════════════════════════════════════════╗"
-echo "║                  Installation Complete!                       ║"
+echo "║                   Installation Complete!                     ║"
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
 echo ""
@@ -150,6 +158,10 @@ echo "  2. Start a new conversation and ask about your workouts!"
 echo ""
 echo -e "Installation location: ${YELLOW}${INSTALL_DIR}${NC}"
 echo ""
-echo "To update later:"
-echo -e "  ${BLUE}cd ${INSTALL_DIR} && git pull && source .venv/bin/activate && uv sync${NC}"
+echo "To update later, run this same command again or:"
+echo -e "  ${BLUE}cd ${INSTALL_DIR} && git pull && uv sync && source .venv/bin/activate && mcp install src/tempoai_mcp_server/server.py --name TempoAI --with-editable . --env-file .env${NC}"
+echo ""
+echo "To uninstall:"
+echo -e "  ${BLUE}rm -rf ${INSTALL_DIR}${NC}"
+echo "  Then remove the 'TempoAI' entry from your Claude Desktop config file."
 echo ""
