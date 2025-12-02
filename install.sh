@@ -79,11 +79,11 @@ if [ -d "$INSTALL_DIR" ]; then
         exit 1
     fi
 
-    git pull origin main
+    git pull --quiet origin main
     echo -e "${GREEN}✓ Repository updated${NC}"
 else
     echo -e "${YELLOW}📥 Cloning repository...${NC}"
-    git clone "$REPO_URL" "$INSTALL_DIR"
+    git clone --quiet "$REPO_URL" "$INSTALL_DIR"
     cd "$INSTALL_DIR"
     echo -e "${GREEN}✓ Repository cloned${NC}"
 fi
