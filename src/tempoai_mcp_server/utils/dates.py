@@ -4,7 +4,7 @@ Date utility functions for Tempo AI MCP Server.
 This module provides helper functions for date parsing and default date calculations.
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 
 def get_default_start_date(days_ago: int = 30) -> str:
@@ -12,22 +12,25 @@ def get_default_start_date(days_ago: int = 30) -> str:
     Get a default start date string in YYYY-MM-DD format.
 
     Args:
-        days_ago: Number of days ago from today. Defaults to 30.
+        days_ago: Number of days ago from today (UTC). Defaults to 30.
 
     Returns:
-        Date string in YYYY-MM-DD format.
+        Date string in YYYY-MM-DD format (UTC).
     """
-    return (datetime.now() - timedelta(days=days_ago)).strftime("%Y-%m-%d")
+    return (datetime.now(timezone.utc) - timedelta(days=days_ago)).strftime("%Y-%m-%d")
 
 
 def get_default_end_date() -> str:
     """
-    Get today's date string in YYYY-MM-DD format.
+    Get tomorrow's date string in YYYY-MM-DD format (UTC).
+
+    Uses tomorrow instead of today to ensure workouts from "today" in UTC
+    are not missed due to timezone differences when queries are made.
 
     Returns:
-        Date string in YYYY-MM-DD format.
+        Date string in YYYY-MM-DD format (UTC).
     """
-    return datetime.now().strftime("%Y-%m-%d")
+    return (datetime.now(timezone.utc) + timedelta(days=1)).strftime("%Y-%m-%d")
 
 
 def get_default_future_end_date(days_ahead: int = 30) -> str:
@@ -35,12 +38,12 @@ def get_default_future_end_date(days_ahead: int = 30) -> str:
     Get a default future end date string in YYYY-MM-DD format.
 
     Args:
-        days_ahead: Number of days ahead from today. Defaults to 30.
+        days_ahead: Number of days ahead from today (UTC). Defaults to 30.
 
     Returns:
-        Date string in YYYY-MM-DD format.
+        Date string in YYYY-MM-DD format (UTC).
     """
-    return (datetime.now() + timedelta(days=days_ahead)).strftime("%Y-%m-%d")
+    return (datetime.now(timezone.utc) + timedelta(days=days_ahead)).strftime("%Y-%m-%d")
 
 
 def parse_date_range(
@@ -55,7 +58,7 @@ def parse_date_range(
         default_start_days_ago: Number of days ago for default start date. Defaults to 30.
 
     Returns:
-        Tuple of (start_date, end_date) as strings in YYYY-MM-DD format.
+        Tuple of (start_date, end_date) as strings in YYYY-MM-DD format (UTC).
     """
     if not start_date:
         start_date = get_default_start_date(default_start_days_ago)
